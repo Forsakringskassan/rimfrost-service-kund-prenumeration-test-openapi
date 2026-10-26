@@ -6,9 +6,6 @@ info:
     Testgränssnitt för rimfrost-service-kund-prenumeration.
     Används för manuell testning och demos i Kubernetes-miljö.
 
-    **OBS:** Endpointen är endast aktiv när konfigurationsflaggan
-    `testendpoint.enabled=true` är satt. Den ska inte vara aktiv i produktion.
-
 x-internal: true
 
 paths:
@@ -19,7 +16,6 @@ paths:
       summary: Trigga ett kundcentrerat-data-changed event manuellt
       description: |
         Publicerar ett kundcentrerat-data-changed event för en given `idtyp`/`idvarde`-kombination.
-        Kräver att `testendpoint.enabled=true` är konfigurerat — annars returneras HTTP 404.
       requestBody:
         required: true
         content:
@@ -35,8 +31,6 @@ paths:
       responses:
         '204':
           description: Event publicerat
-        '404':
-          description: Testendpoint är inte aktiverad (testendpoint.enabled=false)
         '400':
           description: Ogiltigt format på idtyp eller idvarde
 
