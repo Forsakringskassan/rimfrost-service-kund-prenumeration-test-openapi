@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: Kund-prenumeration Test API
+  version: 1.0.0
+  description: |
+    Testgränssnitt för rimfrost-service-kund-prenumeration.
+    Används för manuell testning och demos i Kubernetes-miljö.
+
+    **OBS:** Endpointen är endast aktiv när konfigurationsflaggan
+    `testendpoint.enabled=true` är satt. Den ska inte vara aktiv i produktion.
+
+x-internal: true
+
+paths:
+  /test/kundcentrerat-data-changed:
+    post:
+      tags: [TestController]
+      operationId: triggerKundcentreratDataChanged
+      summary: Trigga ett kundcentrerat-data-changed event manuellt
+      description: |
+        Publicerar ett kundcentrerat-data-changed event för en given `idtyp`/`idvarde`-kombination.
+        Kräver att `testendpoint.enabled=true` är konfigurerat — annars returneras HTTP 404.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerRequest'
+            examples:
+              personnummer:
+                summary: Trigga event för personnummer
+                value:
+                  idtyp: PERSONNUMMER
+                  idvarde: "19850101-1234"
+      responses:
+        '204':
+          description: Event publicerat
+        '404':
+          description: Testendpoint är inte aktiverad (testendpoint.enabled=false)
+        '400':
+          description: Ogiltigt format på idtyp eller idvarde
+
+components:
+  schemas:
+    TriggerRequest:
+      type: object
+      required:
+        - idtyp
+        - idvarde
+      properties:
+        idtyp:
+          type: string
+          description: Typ av identifierare
+          example: PERSONNUMMER
+        idvarde:
+          type: string
+          description: Identifieringsvärde
+          example: "19850101-1234"
